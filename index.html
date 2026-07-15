@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Side Hustle ROI & Burnout Matrix</title>
+    <style>
+        :root {
+            --bg-color: #080a08;
+            --card-bg: #121612;
+            --primary: #adff2f;
+            --primary-dim: #7fff00;
+            --text-main: #f0f5f0;
+            --text-muted: #8fa08f;
+            --border-color: #222c22;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 550px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(173, 255, 47, 0.05);
+            margin-bottom: 80px;
+        }
+
+        h1 {
+            font-size: 22px;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        p.subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .ad-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 15px 0;
+            min-height: 60px;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 8px;
+            border: 1px dashed var(--border-color);
+            overflow: hidden;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .currency-symbol {
+            position: absolute;
+            left: 14px;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            background: #080a08;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        input[type="number"] {
+            padding-left: 30px;
+        }
+
+        input[type="number"]:focus, select:focus {
+            border-color: var(--primary);
+        }
+
+        .results-box {
+            background: #080a08;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 24px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-size: 14px;
+            color: var(--text-main);
+        }
+
+        .result-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .result-value.warning {
+            color: #f59e0b;
+        }
+
+        .result-value.highlight {
+            color: var(--primary);
+            font-size: 24px;
+            text-shadow: 0 0 10px rgba(173, 255, 47, 0.3);
+        }
+
+        #sticky-bottom-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #080a08;
+            border-top: 1px solid var(--border-color);
+            padding: 10px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Side Hustle ROI Matrix</h1>
+        <p class="subtitle">Calculate your real hourly wage and evaluate your burnout fatigue factor</p>
+
+        <div id="monetag-banner-top" class="ad-container"></div>
+
+        <div class="input-group">
+            <label for="monthly-revenue">Total Monthly Side Hustle Revenue</label>
+            <div class="input-wrapper">
+                <span class="currency-symbol">$</span>
+                <input type="number" id="monthly-revenue" value="1500" oninput="calculateROI()">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="monthly-expenses">Monthly Tool & Operating Costs</label>
+            <div class="input-wrapper">
+                <span class="currency-symbol">$</span>
+                <input type="number" id="monthly-expenses" value="250" oninput="calculateROI()">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="hours-worked">Total Hours Spent Per Month (Including Admin)</label>
+            <input type="number" id="hours-worked" value="40" oninput="calculateROI()">
+        </div>
+
+        <div class="input-group">
+            <label for="stress-level">Subjective Stress & Fatigue Level</label>
+            <select id="stress-level" onchange="calculateROI()">
+                <option value="1.0">Low Stress (Energizing) (1.0x Cost Multiplier)</option>
+                <option value="1.2" selected>Moderate Fatigue (Draining) (1.2x Cost Multiplier)</option>
+                <option value="1.5">High Burnout (Toxic Fatigue) (1.5x Cost Multiplier)</option>
+            </select>
+        </div>
+
+        <div class="results-box">
+            <div class="result-row">
+                <span class="result-label">Net Monthly Profit:</span>
+                <span class="result-value" id="net-profit">$0.00</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Raw Hourly Pay Rate:</span>
+                <span class="result-value" id="raw-hourly" style="color: #60a5fa;">$0.00/hr</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Burnout Financial Premium penalty:</span>
+                <span class="result-value warning" id="burnout-penalty">$0.00</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">True Stress-Adjusted Hourly ROI:</span>
+                <span class="result-value highlight" id="true-roi">$0.00/hr</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="sticky-bottom-container">
+        <div id="monetag-banner-bottom" style="width:100%; max-width:468px; min-height:60px; text-align:center;"></div>
+    </div>
+
+    <script>
+        function calculateROI() {
+            const revenue = parseFloat(document.getElementById('monthly-revenue').value) || 0;
+            const expenses = parseFloat(document.getElementById('monthly-expenses').value) || 0;
+            const hours = parseFloat(document.getElementById('hours-worked').value) || 1;
+            const stressMultiplier = parseFloat(document.getElementById('stress-level').value) || 1.0;
+
+            const netProfit = revenue - expenses;
+            const rawHourly = netProfit / hours;
+            const burnoutPenalty = netProfit * (stressMultiplier - 1);
+            const trueROI = (netProfit - burnoutPenalty) / hours;
+
+            document.getElementById('net-profit').innerText = "$" + netProfit.toFixed(2);
+            document.getElementById('raw-hourly').innerText = "$" + rawHourly.toFixed(2) + "/hr";
+            document.getElementById('burnout-penalty').innerText = "-$" + burnoutPenalty.toFixed(2);
+            document.getElementById('true-roi').innerText = trueROI > 0 ? "$" + trueROI.toFixed(2) + "/hr" : "$0.00/hr (Negative ROI)";
+        }
+        window.onload = function() { calculateROI(); };
+    </script>
+
+    <!-- MONETAG AD ZONE SCRIPT ATTACHMENTS -->
+    <script type="text/javascript">
+        (function(s,u,z,p){s.src=u;s.setAttribute('data-zone',z);p.appendChild(s);})(document.createElement('script'),'https://zovidree.com||document.documentElement);
+    </script>
+    <script type="text/javascript">
+        (function(s,u,z,p){s.src=u;s.setAttribute('data-zone',z);p.appendChild(s);})(document.createElement('script'),'https://zovidree.com||document.documentElement);
+    </script>
+</body>
+</html>
